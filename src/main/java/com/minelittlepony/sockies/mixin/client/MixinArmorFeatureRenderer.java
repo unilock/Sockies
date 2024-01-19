@@ -1,6 +1,7 @@
 package com.minelittlepony.sockies.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -23,6 +24,7 @@ abstract class MixinArmorFeatureRenderer<
         A extends BipedEntityModel<T>>
             extends FeatureRenderer<T, M> {
 
+    @Unique
     private AccessoryFeatureRenderer<T, M, A> accessories;
 
     MixinArmorFeatureRenderer() { super(null); }
@@ -32,7 +34,7 @@ abstract class MixinArmorFeatureRenderer<
         accessories = new AccessoryFeatureRenderer<>(context, inner, outer);
     }
 
-    @Inject(method = "render", at = @At("RETURN"))
+    @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/entity/LivingEntity;FFFFFF)V", at = @At("RETURN"))
     private void onRender(MatrixStack stack, VertexConsumerProvider renderContext, int lightUv, T entity, float limbDistance, float limbAngle, float tickDelta, float age, float headYaw, float headPitch, CallbackInfo info) {
         accessories.render(stack, renderContext, lightUv, entity, limbDistance, limbAngle, tickDelta, age, headYaw, headPitch);
     }
